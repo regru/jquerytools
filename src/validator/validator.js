@@ -218,7 +218,15 @@
 	
 	
 	/******* built-in HTML5 standard validators *********/
+	v.fn("[required]", "Please complete this mandatory field.", function(el, v) {
+		if (el.is(":checkbox")) { return el.is(":checked"); }
+		return !!v;			
+	});
 	
+	v.fn("[pattern]", function(el, v) {
+		return v === '' || new RegExp("^" + el.attr("pattern") + "$").test(v);
+	});
+
 	v.fn(":email", "Please enter a valid email address", function(el, v) {
 		return !v || emailRe.test(v);
 	});
@@ -248,31 +256,22 @@
 		var min = el.attr("min");
 		return parseFloat(v) >= parseFloat(min) ? true : [min];
 	});
-	
-	v.fn("[required]", "Please complete this mandatory field.", function(el, v) {
-		if (el.is(":checkbox")) { return el.is(":checked"); }
-		return !!v; 			
-	});
-	
-	v.fn("[pattern]", function(el, v) {
-		return v === '' || new RegExp("^" + el.attr("pattern") + "$").test(v);
-	});
 
 	v.fn(":radio", "Please select an option.", function(el) {
 		var	checked = false;
 		var	els = $("[name='" + el.attr("name") + "']").each(function(i, el) {
-			if ($(el).is(":checked")) {
-				checked = true;
-			}
+		   	if ($(el).is(":checked")) {
+		   		checked = true;
+		   	}
 		});
 		return (checked) ? true : false;
 	});
 	
 	function Validator(inputs, form, conf) {		
-		
-		// private variables
-		var self = this, 
-			fire = form.add(self);
+	                                        	
+	                                        	// private variables
+	                                        	var self = this, 
+	                                        		fire = form.add(self);
 
 		// make sure there are input fields available
 		inputs = inputs.not(":button, :image, :reset, :submit");			 
