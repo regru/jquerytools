@@ -26,24 +26,24 @@
 		 
 	v = $.tools.validator = {
 		
-		conf: {   
-			grouped: false, 				// show all error messages at once inside the container 
-			effect: 'default',			// show/hide effect for error message. only 'default' is built-in
-			errorClass: 'invalid',		// input field class name in case of validation error		
-			
-			// when to check for validity?
-			inputEvent: null,				// change, blur, keyup, null 
-			errorInputEvent: 'keyup',  // change, blur, keyup, null
-			formEvent: 'submit',       // submit, null
+		conf: {
+			grouped: false,              // show all error messages at once inside the container
+			effect: 'default',           // show/hide effect for error message. only 'default' is built-in
+			errorClass: 'invalid',       // input field class name in case of validation error
 
-			lang: 'en',						// default language for error messages 
+			// when to check for validity?
+			inputEvent: null,            // change, blur, keyup, null
+			errorInputEvent: 'keyup',    // change, blur, keyup, null
+			formEvent: 'submit',         // submit, null
+
+			lang: 'en',                  // default language for error messages
 			message: '<div/>',
 			messageAttr: 'data-message', // name of the attribute for overridden error message
-			messageClass: 'error',		// error message element's class name
+			messageClass: 'error',       // error message element's class name
 			offset: [0, 0], 
 			position: 'center right',
-			singleError: false, 			// validate all inputs at once
-			speed: 'normal'				// message's fade-in speed			
+			singleError: false,          // validate all inputs at once
+			speed: 'normal'              // message's fade-in speed
 		},
 
 
@@ -361,7 +361,7 @@
 						}
 					});
 
-				  	errs = errors; 
+					errs = errors; 
 					e = $.Event();
 				}
 				
@@ -370,10 +370,10 @@
 				fire.trigger(e, [errs]); 
 				
 				// call the effect
-				if (!e.isDefaultPrevented()) {						
-					effects[conf.effect][0].call(self, errs, e);													
+				if (!e.isDefaultPrevented()) {
+                    effects[conf.effect][0].call(self, errs, e);
 				}
-				
+
 				return self;
 			},
 			
@@ -385,13 +385,13 @@
 						msg.remove();
 						$(this).data("msg.el", null);
 					}
-				}).off(conf.errorInputEvent + '.v' || '');
+				}).off(conf.errorInputEvent.replace(/(\s+|$)/g, '.v ') || '');
 				return self;
 			},
 			
 			destroy: function() { 
 				form.off(conf.formEvent + ".V reset.V"); 
-				inputs.off(conf.inputEvent + ".V change.V");
+				inputs.off(conf.inputEvent ? ( conf.inputEvent.replace(/(\s+|$)/g, '.V ') + 'change.V' ) : '');
 				return self.reset();	
 			}, 
 			
@@ -428,11 +428,11 @@
  
 				// loop trough the inputs
 				els.each(function() {
-						
+					                                         	
 					// field and it's error message container						
 					var msgs = [], 
 						 el = $(this).data("messages", msgs),
-						 event = dateInput && el.is(":date") ? "onHide.v" : conf.errorInputEvent + ".v";					
+						 event = dateInput && el.is(":date") ? "onHide.v" : conf.errorInputEvent.replace(/(\s+|$)/g, '.v ');					
 					
 					// cleanup previous validation event
 					el.off(event);
@@ -451,21 +451,21 @@
 							
 							// validation failed. multiple substitutions can be returned with an array
 							if (returnValue !== true) {								
-								
-								// onBeforeFail
-								e.type = "onBeforeFail";
-								fire.trigger(e, [el, match]);
-								if (e.isDefaultPrevented()) { return false; }
-								
-								// overridden custom message
-								var msg = el.attr(conf.messageAttr);
-								if (msg) { 
-									msgs = [msg];
-									return false;
-								} else {
-									pushMessage(msgs, match, returnValue);
-								}
-							}							
+							                           	
+							                           	// onBeforeFail
+							                           	e.type = "onBeforeFail";
+							                           	fire.trigger(e, [el, match]);
+							                           	if (e.isDefaultPrevented()) { return false; }
+							                           	
+							                           	// overridden custom message
+							                           	var msg = el.attr(conf.messageAttr);
+							                           	if (msg) { 
+							                           		msgs = [msg];
+							                           		return false;
+							                           	} else {
+							                           		pushMessage(msgs, match, returnValue);
+							                           	}
+							}                          							
 						}
 					});
 					
@@ -478,10 +478,10 @@
 						
 						// begin validating upon error event type (such as keyup) 
 						if (conf.errorInputEvent) {							
-							el.on(event, function(e) {
-								self.checkValidity(el, e);		
-							});							
-						} 					
+						                           	el.on(event, function(e) {
+						                           	   	self.checkValidity(el, e);		
+						                           	});	                          						
+						}                          	   	                          			
 					}
 					
 					if (conf.singleError && errs.length) { return false; }
@@ -495,9 +495,9 @@
 				
 				// errors found
 				if (errs.length) {					 
-					self.invalidate(errs, e); 
-					return false;
-					
+				                  	self.invalidate(errs, e); 
+				                  	return false;
+				                  	
 				// no errors
 				} else {
 					
@@ -508,7 +508,7 @@
 					e.type = "onSuccess";					
 					fire.trigger(e, [els]);
 					
-					els.off(conf.errorInputEvent + ".v");
+					els.off(conf.errorInputEvent.replace(/(\s+|$)/g, '.v '));
 				}
 				
 				return true;				
@@ -519,17 +519,17 @@
 		
 		// callbacks	
 		$.each("onBeforeValidate,onBeforeFail,onFail,onSuccess".split(","), function(i, name) {
-				
-			// configuration
-			if ($.isFunction(conf[name]))  {
-				$(self).on(name, conf[name]);	
-			}
-			
-			// API methods				
-			self[name] = function(fn) {
-				if (fn) { $(self).on(name, fn); }
-				return self;
-			};
+		   		
+		   	// configuration
+		   	if ($.isFunction(conf[name]))  {
+		   		$(self).on(name, conf[name]);	
+		   	}
+		   	
+		   	// API methods				
+		   	self[name] = function(fn) {
+		   		if (fn) { $(self).on(name, fn); }
+		   		return self;
+		   	};
 		});	
 		
 		
@@ -554,7 +554,7 @@
 		if (inputs[0] && inputs[0].validity) {
 			inputs.each(function()  {
 				this.oninvalid = function() { 
-					return false; 
+				  	return false; 
 				};		
 			});
 		}
@@ -566,8 +566,8 @@
 		
 		// input validation               
 		if (conf.inputEvent) {
-			inputs.on(conf.inputEvent + ".V", function(e) {
-				self.checkValidity($(this), e);
+			inputs.on(conf.inputEvent.replace(/(\s+|$)/g, '.V '), function(e) {
+			   	self.checkValidity($(this), e);
 			});	
 		} 
 	
