@@ -152,8 +152,8 @@
 				
 				// loop errors
 				$.each(errs, function(i, err) {
-						
-					// add error class	
+					                      	
+					// add error class    	
 					var input = err.input;					
 					input.addClass(conf.errorClass);
 					
@@ -183,7 +183,8 @@
 					var pos = getPosition(input, msg, conf); 
 					 
 					msg.css({ visibility: 'visible', position: 'absolute', top: pos.top, left: pos.left })
-						.fadeIn(conf.speed);     
+						.fadeIn(conf.speed);
+					!input.is(':visible') && msg.hide();
 				});
 						
 				
