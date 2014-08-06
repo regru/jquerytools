@@ -417,7 +417,7 @@
 
 				if (!els.length) { return true; }
 				// fix ie bug, for input event
-				if (e.type == 'input' && !els.eq(0).val() ) { return true; }
+				if (e && e.type == 'input' && !els.eq(0).val() ) { return true; }
 
 				e = e || $.Event();
 
