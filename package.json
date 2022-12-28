@@ -1,4 +1,19 @@
 {
-  "name": "jquerytools",
-  "version": "1.2.11"
+  "name": "@regru/jquery-tools",
+  "version": "1.2.11",
+  "description": "The Missing UI library for the Web",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/regru/jquerytools.git"
+  },
+  "author": "Tero Piirainen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/regru/jquerytools/issues"
+  },
+  "homepage": "https://github.com/regru/jquerytools#readme"
 }
